@@ -6,7 +6,7 @@
 /*   By: ldaniel <ldaniel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:29:41 by ldaniel           #+#    #+#             */
-/*   Updated: 2023/08/25 13:22:31 by ldaniel          ###   ########.fr       */
+/*   Updated: 2023/08/25 14:53:59 by ldaniel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,23 +103,32 @@ int	running(t_data *data, char **env)
 	return (1);
 }
 
+
+char *colorize_prompt(const char *prompt) {
+    return "\033[1;32m" // Séquence d'échappement pour la couleur verte
+           "Minishell$> "
+           "\033[0m";
+}
+
 int	main(void)
 {
 	t_data data;
 
+	if (signal(SIGINT, handle_signal) == SIG_ERR)
+		printf("failed to catch signal\n");
 	while (1)
 	{
-		if (signal(SIGINT, handle_signal) == SIG_ERR)
-			printf("failed to catch signal\n");
 		data.env = get_env();
 		data.path = get_env();
-		data.str = readline("Minishell$> ");
-		if (data.str)
+		data.str = readline(colorize_prompt("Minishell$> "));
+		if (data.str == NULL)
 		{
-			if (data.str[0] != '\0' && ft_strcomp("exit", data.str) == 1)
-				exit(0);
-			running(&data, data.env);
+			printf("\n");
+			break;
 		}
+		if (data.str[0] != '\0' && ft_strcomp("exit", data.str) == 1)
+			exit(0);
+		running(&data, data.env);
 	}
 	return (0);
 }
