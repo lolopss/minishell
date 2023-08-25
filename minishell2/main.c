@@ -6,7 +6,7 @@
 /*   By: ldaniel <ldaniel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:29:41 by ldaniel           #+#    #+#             */
-/*   Updated: 2023/08/25 14:53:59 by ldaniel          ###   ########.fr       */
+/*   Updated: 2023/08/25 15:45:04 by ldaniel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	run_command(char **path, char **env, char *p)
 			if (execve(ft_strjoin(path[j], arg[0]), arg, env) != -1)
 				verify++;
 	if (!verify)
-		printf("Command '%s' not found\n", arg[0]);
+		printf("%s: Command  not found\n", arg[0]);
 	free(arg);
 }
 
@@ -128,7 +128,9 @@ int	main(void)
 		}
 		if (data.str[0] != '\0' && ft_strcomp("exit", data.str) == 1)
 			exit(0);
-		running(&data, data.env);
+		if (data.str[0] != '\0') 
+			running(&data, data.env);
+		free(data.str);
 	}
 	return (0);
 }
